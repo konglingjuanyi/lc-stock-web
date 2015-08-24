@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.GroupInfoMapper">
+
+	<resultMap type="GroupInfo" id="groupInfoMap">
+		<id property="uid" column="uid" />
+		<result property="name" column="name" />
+		<result property="isAdmin" column="isadmin" />
+		<result property="parentUid" column="parentuid" />
+	</resultMap>
+
+	<select id="getGroupList" statementType="PREPARED" resultType="GroupInfo"
+		parameterType="String">
+		select * from groupinfo where name like #{name}
+	</select>
+
+	<select id="getGroupListByParnet" statementType="PREPARED"
+		resultType="GroupInfo" parameterType="String">
+		select * from groupinfo where
+		parentuid =#{parentUid}
+	</select>
+
+	<select id="getGroup" statementType="PREPARED" resultType="GroupInfo"
+		parameterType="String">
+		select * from groupinfo where uid=#{uid}
+	</select>
+
+	<insert id="createGroup" statementType="PREPARED" parameterType="GroupInfo">
+		insert into groupinfo (uid,name,isadmin,parnetuid)
+		values(uuid(),#{name},#{isAdmin},#{parentUid})
+	</insert>
+
+	<update id="updateGroup" statementType="PREPARED" parameterType="GroupInfo">
+		update groupinfo set
+		name=#{name},isadmin=#{isAdmin},parentuid=#{parnetUid} where
+		uid=#{uid}
+	</update>
+
+	<delete id="deleteGroup" statementType="PREPARED" parameterType="String">
+		delete from groupinfo where uid=#{uid}
+	</delete>
+
+</mapper>

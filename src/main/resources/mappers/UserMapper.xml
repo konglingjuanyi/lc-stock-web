@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.UserMapper">
+
+	<resultMap type="User" id="userMap">
+		<id property="uid" column="uid" />
+		<result property="userName" column="username" />
+		<result property="password" column="password" />
+		<result property="name" column="name" />
+		<result property="phone" column="phone" />
+		<result property="isAdmin" column="isadmin" />
+		<result property="isCustomer" column="iscustomer" />
+		<result property="headUrl" column="headurl" />
+	</resultMap>
+
+	<select id="getUserList" statementType="PREPARED" resultType="User"
+		parameterType="Map">
+		select
+		*
+		from
+		user
+		<trim prefix="where" prefixOverrides="and">
+			<if test="#{name} !=null">
+				name like '%'+#{name}+'%'
+			</if>
+
+			<if test="#{userName} !=null">
+				userName like '%'+#{userName}+'%'
+			</if>
+		</trim>
+
+	</select>
+
+	<select id="getUserByLogin" statementType="PREPARED" resultType="User"
+		parameterType="Map">
+		select * from user where username=#{userName} and
+		password=#{password}
+	</select>
+
+	<select id="existsUserName" statementType="PREPARED" resultType="int"
+		parameterType="String">
+		select count(uid) as datacount from user where
+		username=#{userName}
+	</select>
+
+	<select id="getUser" statementType="PREPARED" resultType="User"
+		parameterType="String">
+		select * from user where uid=#{uid}
+	</select>
+
+	<insert id="createUser" statementType="PREPARED" parameterType="User">
+		insert into
+		user(uid,username,password,name,phone,isadmin,iscustomer,headurl)
+		values
+		(uuid(),#{userName},#{password},#{name},#{phone},#{isAdmin},#{isCustomer},#{headUrl})
+	</insert>
+
+	<update id="updateUser" statementType="PREPARED" parameterType="User">
+		update
+		user
+		set
+		name=#{name},
+		phone=#{phone},
+		isadmin=#{isAdmin},
+		iscustomer=#{isCustomer},
+		headurl=#{headUrl}
+		where
+		uid=#{uid}
+	</update>
+
+	<update id="updateUserPassword" statementType="PREPARED"
+		parameterType="Map">
+		update
+		user
+		set
+		password=#{password}
+		where
+		uid=#{uid}
+	</update>
+
+	<update id="updateUserByDel" statementType="PREPARED"
+		parameterType="String">
+		update
+		user
+		set
+		isdeleted=1
+		where
+		uid=#{uid}
+	</update>
+
+	<delete id="deleteUser" statementType="PREPARED" parameterType="String">
+		delete from user where uid=#{uid}
+	</delete>
+
+</mapper>
